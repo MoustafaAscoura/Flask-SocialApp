@@ -3,9 +3,14 @@
 {% from 'macros/macros.html' import controlButtons with context %}
                 
 <div class="container mt-3">
+    {% if category %}
+        <h1 class="text-center">Showing all posts in {{category.name}}</h1>
+        {% set posts=category.posts %}
+    {%else%}
     <div class="d-flex justify-content-end">
         <a href="{{url_for ('posts.create')}}"><button class="btn btn-primary">Add New Post</button></a>
     </div>
+    {%endif%}
     <hr>
     <div class="row gx-4 gy-5 mb-5  d-flex justify-content-center">
         {% for post in posts %}
@@ -14,11 +19,17 @@
             <div class="card-body">
               <h4 class="card-title">{{post.title}}</h4>
               <p class="card-text">{{post.body}}</p>
+              <div class="d-flex justify-content-between">
+                <p>Category: <a href="{{url_for('category.show',id=post.category.id)}}" class="badge bg-info text-dark">{{post.category}}</a></p>
+
               {% if post.created_on != post.updated_on %}
                   <p class="card-text text-muted">Updated: {{post.updated_on}}</p>
               {%else%}
                   <p class="card-text text-muted">Created: {{post.created_on}}</p>
               {%endif%}
+              </div>
+              
+
               {{ controlButtons(post.id) }}
             </div>
           </div>

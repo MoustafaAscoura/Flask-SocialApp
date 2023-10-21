@@ -14,8 +14,9 @@ def create_app(config_name='dev'):
     migrate = Migrate(app, db, render_as_batch=True)
 
     #register blueprint in the application
-    from app.posts import posts_blueprint
+    from app.posts import posts_blueprint, category_blueprint
     app.register_blueprint(posts_blueprint)
+    app.register_blueprint(category_blueprint)
 
 
     # with app.app_context():

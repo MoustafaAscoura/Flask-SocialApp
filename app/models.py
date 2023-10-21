@@ -1,5 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import url_for
+from werkzeug.utils import secure_filename
+import app,os
 
 db = SQLAlchemy()
 
@@ -21,9 +23,35 @@ class Post(db.Model):
     def get_show_url(self):
         return  url_for('posts.show', id=self.id)
 
-    @property
-    def get_delete_url(self):
-        return  url_for('posts.delete', id= self.id)
+    def edit_post(self,request):
+        img = request.files['image']
+        if img:
+            filename = secure_filename(img.filename)
+            img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            self.image=img.filename
+
+        self.title=request.form['title']
+        self.body=request.form['body']
+        
+        db.session.commit()
+
+    @classmethod
+    def get_all_posts(cls):
+        return cls.query.all()
+        
+    @classmethod
+    def create_post(cls,**kwargs):
+        post = Post(title=kwargs['title'], body=kwargs['body'],image=kwargs['image'])
+        db.session.add(post)
+        db.session.commit()
+        
+    @classmethod
+    def delete_post(cls,id):
+        post = Post.query.get_or_404(id)
+        db.session.delete(post)
+        db.session.commit()
+    
+
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,3 +61,11 @@ class Category(db.Model):
     @property
     def get_show_url(self):
         return  url_for('category.show', id=self.id)
+    
+    @classmethod
+    def get_posts(cls,id):
+        category = Category.query.get_or_404(id)
+        return category.posts
+
+    def __str__(self):
+        return self.name

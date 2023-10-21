@@ -20,7 +20,7 @@ $("form[mode='edit'").submit(function(evt){
     enctype: 'multipart/form-data',
     processData: false,
   });
-  window.location.href = window.location.origin
+  window.location.href = window.location.origin + '/posts'
 }); 
     
 
