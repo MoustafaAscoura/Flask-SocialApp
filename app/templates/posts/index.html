@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+{% from 'macros/macros.html' import controlButtons with context %}
+                
+<div class="container mt-3">
+    <div class="d-flex justify-content-end">
+        <a href="{{url_for ('posts.create')}}"><button class="btn btn-primary">Add New Post</button></a>
+    </div>
+    <hr>
+    <div class="row gx-4 gy-5 mb-5  d-flex justify-content-center">
+        {% for post in posts %}
+        <div class="card col-8">
+            <img class="card-img-top img-fluid" style="max-height: 400px;object-fit: contain;" src="{{post.get_image_url}}" alt="Card image cap" >
+            <div class="card-body">
+              <h4 class="card-title">{{post.title}}</h4>
+              <p class="card-text">{{post.body}}</p>
+              {% if post.created_on != post.updated_on %}
+                  <p class="card-text text-muted">Updated: {{post.updated_on}}</p>
+              {%else%}
+                  <p class="card-text text-muted">Created: {{post.created_on}}</p>
+              {%endif%}
+              {{ controlButtons(post.id) }}
+            </div>
+          </div>
+        {% endfor %}
+        
+     </div>
+</div>
+
+{% endblock %}

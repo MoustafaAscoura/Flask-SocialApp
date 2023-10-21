@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container my-5">
+    {% if mode == 'edit' %}
+        <h1>Edit Product</h1>
+        <form class="form" method="post"  mode='{{mode}}' action='{{url_for("posts.edit", id=post.id)}}' enctype="multipart/form-data"> 
+    {% else %}
+        <h1>Add New Product</h1>
+        <form class="form" method="post"  mode='{{mode}}' action='{{url_for("posts.create")}}' enctype="multipart/form-data"> 
+    {% endif %}
+        <div class="mb-3">
+            <label for="posttitle" class="form-label">Title</label>
+            <input required class="form-control" name="title" id="posttitle" value="{{post.title}}" rows="3"></input>
+        </div>       
+
+        <div class="mb-3">
+            <label for="postbody" class="form-label">Body</label>
+            <textarea class="form-control" name="body" id="postbody" rows="3">{{post.body}}</textarea>
+        </div>
+
+        <div class="mb-3">
+
+            <label for="postimage" class="form-label">Image</label>
+            <input class="form-control" name="image" type="file" id="postimage" rows="3"></input>
+        </div>    
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+
+</div>
+
+
+{% endblock %}
+

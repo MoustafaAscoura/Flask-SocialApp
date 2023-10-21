@@ -1,0 +1,7 @@
+{% macro controlButtons(id) %}
+    <div class="d-flex justify-content-around">
+        <a href="{{url_for ('posts.show', id=id)}}" class="btn btn-primary">Show</a>
+        <a href="{{url_for ('posts.edit', id=id)}}" class="btn btn-warning edit-post">Edit</a>
+        <a href="{{url_for ('posts.delete', id=id)}}" class="btn btn-danger delete-post">Delete</a>
+    </div>
+{% endmacro %}
