@@ -27,7 +27,8 @@ class Post(db.Model):
         img = request.files['image']
         if img:
             filename = secure_filename(img.filename)
-            img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            img.save(os.path.join('./static/posts/images', filename))
             self.image=img.filename
 
         self.title=request.form['title']
