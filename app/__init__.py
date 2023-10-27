@@ -1,8 +1,11 @@
 from flask import Flask
 from app.config import projectConfig as AppConfig
 from flask_migrate import Migrate
+from flask_restful import Api
 
-from app.models import db, Post, Category
+from app.models import db
+
+from app.posts.apiviews import PostsView, PostView
 
 def create_app(config_name='dev'):
     app = Flask(__name__)
@@ -14,30 +17,17 @@ def create_app(config_name='dev'):
     db.init_app(app)
     migrate = Migrate(app, db, render_as_batch=True)
 
+    #Api settings
+    api = Api(app)
+    api.add_resource(PostsView, '/api/posts')
+    api.add_resource(PostView, '/api/posts/<int:id>')
+
+
     #register blueprint in the application
     from app.posts import posts_blueprint, category_blueprint
     app.register_blueprint(posts_blueprint)
     app.register_blueprint(category_blueprint)
 
-
-    # with app.app_context():
-    #     db.create_all()
-
-    #     from app.postsData import data
-    #     posts = data['posts']
-    #     for i in range(len(posts)):
-    #         post = posts[i]
-    #         for cat in post['tags']:
-    #             if Category.query.filter_by(name=cat).first() is None:
-    #                 _category = Category(name=cat)
-    #                 db.session.add(_category)
-    #                 db.session.commit()
-    #         category=Category.query.filter_by(name=post['tags'][0]).first()
-    #         _post = Post(title=post['title'], body=post['body'],image=f"picture{post['id']}.png",category=category)
-    #         db.session.add(_post)
-        
-    #     db.session.commit()
-    #     print(Post.query.all())
     
     return app
 

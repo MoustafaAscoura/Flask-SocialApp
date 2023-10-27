@@ -23,17 +23,13 @@ class Post(db.Model):
     def get_show_url(self):
         return  url_for('posts.show', id=self.id)
 
-    def edit_post(self,request):
-        img = request.files['image']
-        if img:
-            filename = secure_filename(img.filename)
-            # img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            img.save(os.path.join('./static/posts/images', filename))
-            self.image=img.filename
-
-        self.title=request.form['title']
-        self.body=request.form['body']
-        
+    def edit_post(self,**kwargs):
+        self.image=kwargs['image']
+        self.title=kwargs['title']
+        self.body=kwargs['body']
+        if kwargs['category_id']:
+            self.Category_id=kwargs['category_id']
+            
         db.session.commit()
 
     @classmethod
@@ -43,6 +39,8 @@ class Post(db.Model):
     @classmethod
     def create_post(cls,**kwargs):
         post = Post(title=kwargs['title'], body=kwargs['body'],image=kwargs['image'])
+        if kwargs['category_id']:
+            post.Category_id=kwargs['category_id']
         db.session.add(post)
         db.session.commit()
         

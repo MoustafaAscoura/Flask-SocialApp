@@ -40,7 +40,19 @@ def edit(id):
     if request.method == 'GET':
         return render_template('posts/form.html',mode='edit',post=post)
     
-    post.edit_post(request)
+    img = request.files['image']
+    if img:
+        filename = secure_filename(img.filename)
+        # img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        img.save(os.path.join('./static/posts/images', filename))
+        image=img.filename
+    else:
+        image = "annon.png"
+    
+    title=request.form['title']
+    body=request.form['body']
+
+    post.edit_post(title=title,body=body,image=image)
     return redirect(url_for('posts.index'))
     
 @category_blueprint.route('/<int:id>', endpoint='show')
